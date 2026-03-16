@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>消防職員 共有ポータル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;900&family=M+PLUS+1:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: #1a2236;
+  --bg-card-hover: #1f2a42;
+  --accent: #e05a33;
+  --accent-light: #f07050;
+  --accent-glow: rgba(224, 90, 51, 0.15);
+  --text-primary: #f0f2f8;
+  --text-secondary: #8a94a8;
+  --text-muted: #5a6478;
+  --border: #2a3450;
+  --border-light: #354060;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --glass: rgba(26, 34, 54, 0.85);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* === LOGIN SCREEN === */
+.login-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.login-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.login-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 30% 20%, rgba(224, 90, 51, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(224, 90, 51, 0.05) 0%, transparent 50%);
+}
+
+.login-box {
+  position: relative;
+  width: 400px;
+  max-width: 90vw;
+  padding: 48px 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  animation: fadeUp 0.6s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  box-shadow: 0 4px 20px rgba(224, 90, 51, 0.3);
+}
+
+.login-box h1 {
+  font-family: 'M PLUS 1', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+.login-box p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+.login-input-wrap {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.login-input-wrap input {
+  width: 100%;
+  padding: 14px 18px 14px 46px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 15px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.login-input-wrap input:focus {
+  border-color: var(--accent);
+}
+
+.login-input-wrap .icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.login-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(224, 90, 51, 0.35);
+}
+
+.login-error {
+  color: var(--accent-light);
+  font-size: 13px;
+  margin-top: 12px;
+  display: none;
+}
+
+.login-error.show { display: block; }
+
+/* === MAIN APP === */
+.app {
+  display: none;
+  min-height: 100vh;
+}
+
+.app.visible { display: block; }
+
+/* Header */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-mark {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 2px 10px rgba(224, 90, 51, 0.25);
+}
+
+.logo-text {
+  font-family: 'M PLUS 1', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: 0.03em;
+}
+
+.header-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-btn {
+  padding: 8px 16px;
+  background: transparent;
+  color: var(--text-secondary);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+.nav-btn.active { color: var(--accent-light); background: var(--accent-glow); }
+
+.logout-btn {
+  padding: 7px 14px;
+  background: rgba(255,255,255,0.05);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-left: 12px;
+}
+
+.logout-btn:hover { color: var(--text-primary); border-color: var(--border-light); }
+
+/* Content */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+.section { display: none; animation: fadeUp 0.4s ease; }
+.section.active { display: block; }
+
+/* Section Header */
+.section-header {
+  margin-bottom: 32px;
+}
+
+.section-header h2 {
+  font-family: 'M PLUS 1', sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-header p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* Cards Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: all 0.25s ease;
+  cursor: default;
+}
+
+.card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+}
+
+.card-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--accent-glow);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.card .meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.card .desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.card-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(224, 90, 51, 0.1);
+  color: var(--accent-light);
+  border: 1px solid rgba(224, 90, 51, 0.2);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.card-btn:hover {
+  background: rgba(224, 90, 51, 0.18);
+  border-color: rgba(224, 90, 51, 0.35);
+}
+
+/* Video Cards */
+.video-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.video-card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+}
+
+.video-thumb {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.video-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.3);
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.play-overlay:hover { background: rgba(0,0,0,0.15); }
+
+.play-btn-circle {
+  width: 60px;
+  height: 60px;
+  background: rgba(224, 90, 51, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+
+.play-overlay:hover .play-btn-circle { transform: scale(1.08); }
+
+.video-info {
+  padding: 20px;
+}
+
+.video-info h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.video-info .meta { font-size: 12px; color: var(--text-muted); }
+
+/* Announcements */
+.announce-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.announce-item {
+  display: flex;
+  gap: 20px;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.2s;
+  align-items: flex-start;
+}
+
+.announce-item:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-light);
+}
+
+.announce-date {
+  flex-shrink: 0;
+  text-align: center;
+  min-width: 56px;
+}
+
+.announce-date .month {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.announce-date .day {
+  font-size: 26px;
+  font-weight: 900;
+  font-family: 'M PLUS 1', sans-serif;
+  line-height: 1.1;
+}
+
+.announce-body h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.announce-body p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.badge-important { background: rgba(224, 90, 51, 0.15); color: var(--accent-light); }
+.badge-info { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+.badge-new { background: rgba(52, 211, 153, 0.15); color: var(--success); }
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal {
+  width: 90vw;
+  max-width: 900px;
+  max-height: 85vh;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  animation: fadeUp 0.3s ease;
+}
+
+.modal-video {
+  aspect-ratio: 16/9;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-video iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Footer */
+.footer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .header-nav { display: none; }
+  .mobile-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    padding: 8px 12px;
+    justify-content: space-around;
+  }
+  .mobile-nav .nav-btn { font-size: 11px; flex-direction: column; gap: 2px; padding: 8px 12px; }
+  .mobile-nav .nav-btn .nav-icon { font-size: 18px; }
+  .content { padding-bottom: 100px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .login-box { padding: 36px 28px; }
+}
+
+.mobile-nav { display: none; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+
+/* Admin Panel */
+.admin-panel {
+  margin-top: 40px;
+  padding: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.admin-panel h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.admin-panel p.hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.admin-panel textarea,
+.admin-panel input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 12px;
+}
+
+.admin-panel textarea:focus,
+.admin-panel input[type="text"]:focus {
+  border-color: var(--accent);
+}
+
+.admin-panel textarea { min-height: 80px; }
+
+.admin-btn {
+  padding: 10px 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.admin-btn:hover { background: var(--accent-light); }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-bg"></div>
+  <div class="login-box">
+    <div class="login-icon">🔥</div>
+    <h1>消防職員ポータル</h1>
+    <p>資料・動画共有システム ─ 認証が必要です</p>
+    <div class="login-input-wrap">
+      <span class="icon">🔒</span>
+      <input type="password" id="passwordInput" placeholder="パスワードを入力" autocomplete="off">
+    </div>
+    <button class="login-btn" onclick="attemptLogin()">ログイン</button>
+    <div class="login-error" id="loginError">パスワードが正しくありません</div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app" id="mainApp">
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-mark">🔥</div>
+        <span class="logo-text">消防職員ポータル</span>
+      </div>
+      <nav class="header-nav">
+        <button class="nav-btn active" onclick="showSection('news')">📢 お知らせ</button>
+        <button class="nav-btn" onclick="showSection('docs')">📄 資料</button>
+        <button class="nav-btn" onclick="showSection('videos')">🎬 動画</button>
+        <button class="nav-btn" onclick="showSection('admin')">⚙️ 管理</button>
+      </nav>
+      <button class="logout-btn" onclick="logout()">ログアウト</button>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav">
+    <button class="nav-btn active" onclick="showSection('news')">
+      <span class="nav-icon">📢</span> お知らせ
+    </button>
+    <button class="nav-btn" onclick="showSection('docs')">
+      <span class="nav-icon">📄</span> 資料
+    </button>
+    <button class="nav-btn" onclick="showSection('videos')">
+      <span class="nav-icon">🎬</span> 動画
+    </button>
+    <button class="nav-btn" onclick="showSection('admin')">
+      <span class="nav-icon">⚙️</span> 管理
+    </button>
+  </nav>
+
+  <main class="content">
+
+    <!-- お知らせ -->
+    <section class="section active" id="sec-news">
+      <div class="section-header">
+        <h2>お知らせ</h2>
+        <p>最新の連絡事項・通達</p>
+      </div>
+      <div class="announce-list" id="announceList">
+        <div class="announce-item">
+          <div class="announce-date">
+            <div class="month">2026</div>
+            <div class="day">3/14</div>
+          </div>
+          <div class="announce-body">
+            <span class="badge badge-important">重要</span>
+            <h3>救急活動プロトコル改訂について</h3>
+            <p>令和8年4月1日より、アドレナリン投与に関するプロトコルが改訂されます。詳細は資料セクションの改訂資料をご確認ください。</p>
+          </div>
+        </div>
+        <div class="announce-item">
+          <div class="announce-date">
+            <div class="month">2026</div>
+            <div class="day">3/10</div>
+          </div>
+          <div class="announce-body">
+            <span class="badge badge-new">新着</span>
+            <h3>静脈路確保スキルアップ研修のご案内</h3>
+            <p>4月開催の研修動画を公開しました。動画セクションからご視聴いただけます。</p>
+          </div>
+        </div>
+        <div class="announce-item">
+          <div class="announce-date">
+            <div class="month">2026</div>
+            <div class="day">3/05</div>
+          </div>
+          <div class="announce-body">
+            <span class="badge badge-info">情報</span>
+            <h3>心肺蘇生ガイドライン2025 資料追加</h3>
+            <p>JRC蘇生ガイドラインに基づく最新資料を追加しました。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 資料 -->
+    <section class="section" id="sec-docs">
+      <div class="section-header">
+        <h2>資料ライブラリ</h2>
+        <p>業務に必要な資料をダウンロード</p>
+      </div>
+      <div class="card-grid" id="docGrid">
+        <div class="card">
+          <div class="card-icon">🫀</div>
+          <h3>救急活動の心得 CPA編 Ver2</h3>
+          <div class="meta">PPTX • 836 KB</div>
+          <div class="desc">CPA対応の心得（改訂版）。初動から搬送までの要点をまとめた資料。</div>
+          <a class="card-btn" href="kokoroe_CPA_ver2.pptx" target="_blank">📥 ダウンロード</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🫀</div>
+          <h3>救急活動の心得 CPA編</h3>
+          <div class="meta">PPTX • 1.5 MB</div>
+          <div class="desc">CPA対応における救急活動の基本的な心得をまとめた資料。</div>
+          <a class="card-btn" href="kokoroe_CPA.pptx" target="_blank">📥 ダウンロード</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🩹</div>
+          <h3>救急活動の心得 外因編</h3>
+          <div class="meta">PPTX • 1.8 MB</div>
+          <div class="desc">外傷・中毒等の外因性傷病者への対応の心得。</div>
+          <a class="card-btn" href="kokoroe_gaiin.pptx" target="_blank">📥 ダウンロード</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏥</div>
+          <h3>救急活動の心得 内因編</h3>
+          <div class="meta">PPTX • 663 KB</div>
+          <div class="desc">内因性疾患（脳卒中・心疾患等）への対応の心得。</div>
+          <a class="card-btn" href="kokoroe_naiin.pptx" target="_blank">📥 ダウンロード</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🚑</div>
+          <h3>救急隊員向け資料</h3>
+          <div class="meta">PPTX • 813 KB</div>
+          <div class="desc">救急隊員が現場で活用できる総合的な参考資料。</div>
+          <a class="card-btn" href="kyukyutaiin_shiryo.pptx" target="_blank">📥 ダウンロード</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <h3>救急臨床推論 実践編</h3>
+          <div class="meta">PPTX • 885 KB</div>
+          <div class="desc">臨床推論の実践的アプローチ。症例ベースで学ぶ応用編。</div>
+          <a class="card-btn" href="rinsho_suiron_jissen.pptx" target="_blank">📥 ダウンロード</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <h3>救急臨床推論</h3>
+          <div class="meta">PPTX • 2.2 MB</div>
+          <div class="desc">救急現場での臨床推論の考え方と基本フレームワーク。</div>
+          <a class="card-btn" href="rinsho_suiron.pptx" target="_blank">📥 ダウンロード</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 動画 -->
+    <section class="section" id="sec-videos">
+      <div class="section-header">
+        <h2>研修動画</h2>
+        <p>スキルアップのための研修映像</p>
+      </div>
+      <div class="card-grid" id="videoGrid">
+        <div class="video-card">
+          <div class="video-thumb">
+            <img src="https://img.youtube.com/vi/JckHyMzXIvc/hqdefault.jpg" alt="PA連携（CPA）役割分担動画">
+            <div class="play-overlay" onclick="openVideo('JckHyMzXIvc')">
+              <div class="play-btn-circle">▶</div>
+            </div>
+          </div>
+          <div class="video-info">
+            <h3>PA連携（CPA）役割分担動画</h3>
+            <div class="meta">CPA現場でのPA連携における役割分担を解説</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <img src="https://img.youtube.com/vi/bZtKVCT--Tk/hqdefault.jpg" alt="成人教育技法">
+            <div class="play-overlay" onclick="openVideo('bZtKVCT--Tk')">
+              <div class="play-btn-circle">▶</div>
+            </div>
+          </div>
+          <div class="video-info">
+            <h3>成人教育技法</h3>
+            <div class="meta">成人学習理論に基づく効果的な教育手法を解説</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <img src="https://img.youtube.com/vi/s6CY72EJebg/hqdefault.jpg" alt="救急隊の心得（CPA）">
+            <div class="play-overlay" onclick="openVideo('s6CY72EJebg')">
+              <div class="play-btn-circle">▶</div>
+            </div>
+          </div>
+          <div class="video-info">
+            <h3>救急隊の心得（CPA）</h3>
+            <div class="meta">CPA対応における救急隊の基本的な心得を動画で解説</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <img src="https://img.youtube.com/vi/aqHQFa1LzMA/hqdefault.jpg" alt="救急の心得（外傷編）">
+            <div class="play-overlay" onclick="openVideo('aqHQFa1LzMA')">
+              <div class="play-btn-circle">▶</div>
+            </div>
+          </div>
+          <div class="video-info">
+            <h3>救急の心得（外傷編）</h3>
+            <div class="meta">外傷傷病者への対応における救急隊の心得を解説</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <img src="https://img.youtube.com/vi/bQzBhFQ30Dg/hqdefault.jpg" alt="救急の心得（内因編）">
+            <div class="play-overlay" onclick="openVideo('bQzBhFQ30Dg')">
+              <div class="play-btn-circle">▶</div>
+            </div>
+          </div>
+          <div class="video-info">
+            <h3>救急の心得（内因編）</h3>
+            <div class="meta">内因性疾患への対応における救急隊の心得を解説</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <img src="https://img.youtube.com/vi/wzOBfxn5BXY/hqdefault.jpg" alt="解剖学 各論">
+            <div class="play-overlay" onclick="openVideo('wzOBfxn5BXY')">
+              <div class="play-btn-circle">▶</div>
+            </div>
+          </div>
+          <div class="video-info">
+            <h3>解剖学 各論</h3>
+            <div class="meta">各臓器・系統別の解剖学を解説</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <img src="https://img.youtube.com/vi/T6miENlXbCI/hqdefault.jpg" alt="多数傷病者対応 基礎編">
+            <div class="play-overlay" onclick="openVideo('T6miENlXbCI')">
+              <div class="play-btn-circle">▶</div>
+            </div>
+          </div>
+          <div class="video-info">
+            <h3>多数傷病者対応 基礎編</h3>
+            <div class="meta">多数傷病者事案における基礎的な対応手順を解説</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <img src="https://img.youtube.com/vi/vkuWZAPYIj4/hqdefault.jpg" alt="多数傷病者対応トリアージ編">
+            <div class="play-overlay" onclick="openVideo('vkuWZAPYIj4')">
+              <div class="play-btn-circle">▶</div>
+            </div>
+          </div>
+          <div class="video-info">
+            <h3>多数傷病者対応トリアージ編</h3>
+            <div class="meta">多数傷病者事案におけるトリアージの手順と判断基準を解説</div>
+          </div>
+        </div>
+        <div class="video-card">
+          <div class="video-thumb">
+            <img src="https://img.youtube.com/vi/FdX5KRnboSw/hqdefault.jpg" alt="多数傷病者 役割編">
+            <div class="play-overlay" onclick="openVideo('FdX5KRnboSw')">
+              <div class="play-btn-circle">▶</div>
+            </div>
+          </div>
+          <div class="video-info">
+            <h3>多数傷病者 役割編</h3>
+            <div class="meta">多数傷病者事案における各隊員の役割分担を解説</div>
+          </div>
+        </div>
+        <!-- 動画を追加する場合は以下をコピーして YouTube動画ID とタイトルを変更 -->
+        <!--
+        <div class="video-card">
+          <div class="video-thumb">
+            <img src="https://img.youtube.com/vi/ここにYouTube動画ID/hqdefault.jpg" alt="タイトル">
+            <div class="play-overlay" onclick="openVideo('ここにYouTube動画ID')">
+              <div class="play-btn-circle">▶</div>
+            </div>
+          </div>
+          <div class="video-info">
+            <h3>タイトル</h3>
+            <div class="meta">説明文</div>
+          </div>
+        </div>
+        -->
+      </div>
+    </section>
+
+    <!-- 管理 -->
+    <section class="section" id="sec-admin">
+      <div class="section-header">
+        <h2>管理パネル</h2>
+        <p>コンテンツの追加・編集</p>
+      </div>
+
+      <div class="admin-panel">
+        <h3>📢 お知らせを追加</h3>
+        <p class="hint">新しいお知らせを掲示板に追加します</p>
+        <input type="text" id="newAnnounceTitle" placeholder="タイトル">
+        <textarea id="newAnnounceBody" placeholder="本文を入力..."></textarea>
+        <select id="newAnnounceBadge" style="width:100%;padding:10px 14px;background:var(--bg-primary);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-family:inherit;font-size:14px;margin-bottom:12px;outline:none;">
+          <option value="important">重要</option>
+          <option value="new">新着</option>
+          <option value="info">情報</option>
+        </select>
+        <button class="admin-btn" onclick="addAnnouncement()">投稿する</button>
+      </div>
+
+      <div class="admin-panel" style="margin-top:20px;">
+        <h3>🔑 パスワード設定</h3>
+        <p class="hint">サイトのログインパスワードを変更します（初期値: fire119）</p>
+        <input type="text" id="newPassword" placeholder="新しいパスワード">
+        <button class="admin-btn" onclick="changePassword()">パスワード変更</button>
+      </div>
+
+      <div class="admin-panel" style="margin-top:20px;">
+        <h3>💡 使い方ガイド</h3>
+        <p class="hint" style="margin-bottom:0; line-height: 1.8;">
+          このサイトは単一HTMLファイルで動作します。<br>
+          <strong>資料の追加:</strong> HTMLの「sec-docs」セクション内にカードを追加してください。<br>
+          <strong>動画の追加:</strong> YouTube等の動画IDを設定し、「sec-videos」にカードを追加してください。<br>
+          <strong>GitHub Pages公開:</strong> このファイルをGitHubリポジトリに置き、Settings → Pages で公開できます。<br>
+          <strong>セキュリティ:</strong> URLを知る人のみアクセス可能 + パスワード認証の二重保護です。<br>
+          パスワードはブラウザのlocalStorageに保存されます。
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 消防職員ポータル ─ このサイトは関係者限定です
+  </footer>
+</div>
+
+<!-- Video Modal -->
+<div class="modal-overlay" id="videoModal" onclick="closeVideo(event)">
+  <button class="modal-close" onclick="closeVideo()">✕</button>
+  <div class="modal">
+    <div class="modal-video" id="videoContainer">
+      <p style="color:var(--text-secondary);font-size:14px;">動画IDを設定すると、ここにYouTube動画が埋め込まれます</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== CONFIG =====
+const DEFAULT_PASSWORD = 'fire119';
+
+function getPassword() {
+  return localStorage.getItem('portal_password') || DEFAULT_PASSWORD;
+}
+
+// ===== AUTH =====
+function attemptLogin() {
+  const input = document.getElementById('passwordInput').value;
+  if (input === getPassword()) {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('mainApp').classList.add('visible');
+    sessionStorage.setItem('authenticated', 'true');
+  } else {
+    document.getElementById('loginError').classList.add('show');
+    document.getElementById('passwordInput').value = '';
+    setTimeout(() => document.getElementById('loginError').classList.remove('show'), 3000);
+  }
+}
+
+document.getElementById('passwordInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') attemptLogin();
+});
+
+// Session check
+if (sessionStorage.getItem('authenticated') === 'true') {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('mainApp').classList.add('visible');
+}
+
+function logout() {
+  sessionStorage.removeItem('authenticated');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('mainApp').classList.remove('visible');
+  document.getElementById('passwordInput').value = '';
+}
+
+// ===== NAVIGATION =====
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    if (b.getAttribute('onclick')?.includes(name)) b.classList.add('active');
+  });
+}
+
+// ===== VIDEO MODAL =====
+function openVideo(videoId) {
+  const container = document.getElementById('videoContainer');
+  // Replace VIDEO_ID with actual YouTube ID
+  if (videoId.startsWith('VIDEO_ID')) {
+    container.innerHTML = '<p style="color:var(--text-secondary);font-size:14px;text-align:center;padding:40px;">動画を埋め込むには、HTMLの onclick="openVideo(\'実際のYouTube動画ID\')" を編集してください</p>';
+  } else {
+    container.innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+  }
+  document.getElementById('videoModal').classList.add('show');
+}
+
+function closeVideo(e) {
+  if (e && e.target !== e.currentTarget) return;
+  document.getElementById('videoModal').classList.remove('show');
+  document.getElementById('videoContainer').innerHTML = '';
+}
+
+// ===== ADMIN =====
+function addAnnouncement() {
+  const title = document.getElementById('newAnnounceTitle').value.trim();
+  const body = document.getElementById('newAnnounceBody').value.trim();
+  const badgeType = document.getElementById('newAnnounceBadge').value;
+  
+  if (!title || !body) { alert('タイトルと本文を入力してください'); return; }
+  
+  const badgeMap = {
+    important: { class: 'badge-important', text: '重要' },
+    new: { class: 'badge-new', text: '新着' },
+    info: { class: 'badge-info', text: '情報' }
+  };
+  
+  const now = new Date();
+  const month = now.getFullYear();
+  const day = `${now.getMonth()+1}/${now.getDate()}`;
+  
+  const badge = badgeMap[badgeType];
+  const html = `
+    <div class="announce-item" style="animation: fadeUp 0.4s ease;">
+      <div class="announce-date">
+        <div class="month">${month}</div>
+        <div class="day">${day}</div>
+      </div>
+      <div class="announce-body">
+        <span class="badge ${badge.class}">${badge.text}</span>
+        <h3>${title}</h3>
+        <p>${body}</p>
+      </div>
+    </div>
+  `;
+  
+  document.getElementById('announceList').insertAdjacentHTML('afterbegin', html);
+  document.getElementById('newAnnounceTitle').value = '';
+  document.getElementById('newAnnounceBody').value = '';
+  
+  // Switch to news section
+  showSection('news');
+}
+
+function changePassword() {
+  const newPw = document.getElementById('newPassword').value.trim();
+  if (!newPw) { alert('パスワードを入力してください'); return; }
+  if (newPw.length < 4) { alert('4文字以上で設定してください'); return; }
+  localStorage.setItem('portal_password', newPw);
+  document.getElementById('newPassword').value = '';
+  alert('パスワードを変更しました: ' + newPw);
+}
+</script>
+
+</body>
+</html>
