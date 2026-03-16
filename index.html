@@ -688,6 +688,8 @@ body {
         <button class="nav-btn active" onclick="showSection('news')">📢 お知らせ</button>
         <button class="nav-btn" onclick="showSection('docs')">📄 資料</button>
         <button class="nav-btn" onclick="showSection('videos')">🎬 動画</button>
+        <button class="nav-btn" onclick="showSection('protocol')">📋 プロトコル</button>
+        <button class="nav-btn" onclick="showSection('law')">⚖️ 法律</button>
         <button class="nav-btn" onclick="showSection('admin')">⚙️ 管理</button>
       </nav>
       <button class="logout-btn" onclick="logout()">ログアウト</button>
@@ -704,6 +706,12 @@ body {
     </button>
     <button class="nav-btn" onclick="showSection('videos')">
       <span class="nav-icon">🎬</span> 動画
+    </button>
+    <button class="nav-btn" onclick="showSection('protocol')">
+      <span class="nav-icon">📋</span> プロトコル
+    </button>
+    <button class="nav-btn" onclick="showSection('law')">
+      <span class="nav-icon">⚖️</span> 法律
     </button>
     <button class="nav-btn" onclick="showSection('admin')">
       <span class="nav-icon">⚙️</span> 管理
@@ -722,34 +730,16 @@ body {
         <div class="announce-item">
           <div class="announce-date">
             <div class="month">2026</div>
-            <div class="day">3/14</div>
-          </div>
-          <div class="announce-body">
-            <span class="badge badge-important">重要</span>
-            <h3>救急活動プロトコル改訂について</h3>
-            <p>令和8年4月1日より、アドレナリン投与に関するプロトコルが改訂されます。詳細は資料セクションの改訂資料をご確認ください。</p>
-          </div>
-        </div>
-        <div class="announce-item">
-          <div class="announce-date">
-            <div class="month">2026</div>
-            <div class="day">3/10</div>
+            <div class="day">3/16</div>
           </div>
           <div class="announce-body">
             <span class="badge badge-new">新着</span>
-            <h3>静脈路確保スキルアップ研修のご案内</h3>
-            <p>4月開催の研修動画を公開しました。動画セクションからご視聴いただけます。</p>
-          </div>
-        </div>
-        <div class="announce-item">
-          <div class="announce-date">
-            <div class="month">2026</div>
-            <div class="day">3/05</div>
-          </div>
-          <div class="announce-body">
-            <span class="badge badge-info">情報</span>
-            <h3>心肺蘇生ガイドライン2025 資料追加</h3>
-            <p>JRC蘇生ガイドラインに基づく最新資料を追加しました。</p>
+            <h3>ポータルサイトを公開しました</h3>
+            <p>消防職員向け共有ポータルを開設しました。以下のコンテンツを掲載しています。</p>
+            <p style="margin-top:8px;">📄 <strong>資料</strong> ─ 救急活動の心得（CPA・外因・内因編）、臨床推論、救急隊員向け資料など7点<br>
+            🎬 <strong>動画</strong> ─ PA連携・成人教育技法・多数傷病者対応など研修動画9本<br>
+            📋 <strong>プロトコル</strong> ─ 坂東MC各種プロトコル（CPA・薬剤・気管挿管・血糖・ショック・PSLS・アナフィラキシー）<br>
+            ⚖️ <strong>法令集</strong> ─ 救急救命士法（全文）・消防法 救急業務関連条文（検索・目次ジャンプ機能付き）</p>
           </div>
         </div>
       </div>
@@ -947,6 +937,81 @@ body {
       </div>
     </section>
 
+    <!-- プロトコル -->
+    <section class="section" id="sec-protocol">
+      <div class="section-header">
+        <h2>BANDO-MC プロトコル</h2>
+        <p>坂東メディカルコントロール協議会 指示指導部会</p>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🫀</div>
+          <h3>CPA（AED）事例対応アルゴリズム</h3>
+          <div class="meta">PDF • Ver.240901</div>
+          <div class="desc">心肺停止傷病者への対応手順。先着消防隊・救急隊（救命士）の役割分担を含む。</div>
+          <a class="card-btn" href="https://raw.githubusercontent.com/o9o72652725-lgtm/fire-portal/main/protocol_CPA_algorithm.pdf" target="_blank">📥 ダウンロード</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">💉</div>
+          <h3>薬剤投与プロトコル</h3>
+          <div class="meta">PDF • Ver.240901</div>
+          <div class="desc">アドレナリン投与の適応・実施要領。接触後10分以内投与を目標とする。</div>
+          <a class="card-btn" href="https://raw.githubusercontent.com/o9o72652725-lgtm/fire-portal/main/protocol_yakuzai.pdf" target="_blank">📥 ダウンロード</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🫁</div>
+          <h3>気管挿管プロトコル</h3>
+          <div class="meta">PDF • Ver.240126</div>
+          <div class="desc">気管挿管認定救命士によるユニバーサルアルゴリズム。適応除外例・実施要領・留意点を含む。</div>
+          <a class="card-btn" href="https://raw.githubusercontent.com/o9o72652725-lgtm/fire-portal/main/protocol_kikan_soukan.pdf" target="_blank">📥 ダウンロード</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🩸</div>
+          <h3>血糖測定プロトコル</h3>
+          <div class="meta">PDF</div>
+          <div class="desc">意識障害傷病者に対する血糖測定および低血糖発作症例へのブドウ糖溶液投与手順。</div>
+          <a class="card-btn" href="https://raw.githubusercontent.com/o9o72652725-lgtm/fire-portal/main/protocol_kettouchi.pdf" target="_blank">📥 ダウンロード</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3>ショックプロトコル</h3>
+          <div class="meta">PDF</div>
+          <div class="desc">心停止前の重症傷病者に対する静脈路確保および輸液プロトコル（特定行為）。</div>
+          <a class="card-btn" href="https://raw.githubusercontent.com/o9o72652725-lgtm/fire-portal/main/protocol_shock.pdf" target="_blank">📥 ダウンロード</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <h3>PSLSプロトコル</h3>
+          <div class="meta">PDF • Vre.220708</div>
+          <div class="desc">脳卒中疑い傷病者の評価手順。CPSS・ELVOスクリーン・搬送先選定を含む。</div>
+          <a class="card-btn" href="https://raw.githubusercontent.com/o9o72652725-lgtm/fire-portal/main/protocol_PSLS.pdf" target="_blank">📥 ダウンロード</a>
+        </div>
+        <div class="card">
+          <div class="card-icon">🐝</div>
+          <h3>アナフィラキシープロトコル</h3>
+          <div class="meta">PDF • Vre.190701</div>
+          <div class="desc">アナフィラキシーに対するエピネフリン製剤投与プロトコル。エピペン投与の指針を含む。</div>
+          <a class="card-btn" href="https://raw.githubusercontent.com/o9o72652725-lgtm/fire-portal/main/protocol_anaphylaxis.pdf" target="_blank">📥 ダウンロード</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 法律 -->
+    <section class="section" id="sec-law">
+      <div class="section-header">
+        <h2>救急隊の法律関係</h2>
+        <p>救急救命士法・消防法の条文を検索・閲覧できます</p>
+      </div>
+      <div style="text-align:center;padding:40px 20px;">
+        <div style="max-width:480px;margin:0 auto;padding:36px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);">
+          <div style="font-size:48px;margin-bottom:16px;">📖</div>
+          <h3 style="font-size:18px;font-weight:700;margin-bottom:8px;">法令集</h3>
+          <p style="color:var(--text-secondary);font-size:14px;margin-bottom:24px;line-height:1.7;">救急救命士法（全文）と消防法・救急業務関連条文を<br>キーワード検索・目次ジャンプで閲覧できます</p>
+          <a href="law.html" style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border-radius:10px;text-decoration:none;font-weight:600;font-size:16px;box-shadow:0 4px 16px rgba(224,90,51,0.3);transition:transform 0.15s,box-shadow 0.15s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 24px rgba(224,90,51,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 16px rgba(224,90,51,0.3)'">📖 法令集を開く</a>
+        </div>
+      </div>
+    </section>
+
     <!-- 管理 -->
     <section class="section" id="sec-admin">
       <div class="section-header">
@@ -1057,7 +1122,6 @@ function showSection(name) {
 // ===== VIDEO MODAL =====
 function openVideo(videoId) {
   const container = document.getElementById('videoContainer');
-  // Replace VIDEO_ID with actual YouTube ID
   if (videoId.startsWith('VIDEO_ID')) {
     container.innerHTML = '<p style="color:var(--text-secondary);font-size:14px;text-align:center;padding:40px;">動画を埋め込むには、HTMLの onclick="openVideo(\'実際のYouTube動画ID\')" を編集してください</p>';
   } else {
@@ -1072,46 +1136,92 @@ function closeVideo(e) {
   document.getElementById('videoContainer').innerHTML = '';
 }
 
-// ===== ADMIN =====
+// ===== ANNOUNCEMENTS (localStorage永続化) =====
+const ANNOUNCE_KEY = 'portal_announcements';
+const badgeMap = {
+  important: { class: 'badge-important', text: '重要' },
+  new: { class: 'badge-new', text: '新着' },
+  info: { class: 'badge-info', text: '情報' }
+};
+
+function getSavedAnnouncements() {
+  try { return JSON.parse(localStorage.getItem(ANNOUNCE_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveAnnouncements(list) {
+  localStorage.setItem(ANNOUNCE_KEY, JSON.stringify(list));
+}
+
+function renderAnnounceItem(a) {
+  const badge = badgeMap[a.badge] || badgeMap.info;
+  return `
+    <div class="announce-item">
+      <div class="announce-date">
+        <div class="month">${a.year}</div>
+        <div class="day">${a.day}</div>
+      </div>
+      <div class="announce-body">
+        <span class="badge ${badge.class}">${badge.text}</span>
+        <h3>${a.title}</h3>
+        <p>${a.body}</p>
+      </div>
+    </div>`;
+}
+
+function loadAnnouncements() {
+  const list = getSavedAnnouncements();
+  if (list.length === 0) return; // HTMLに書いてある初期表示をそのまま使う
+  const container = document.getElementById('announceList');
+  container.innerHTML = list.map(renderAnnounceItem).join('');
+}
+
 function addAnnouncement() {
   const title = document.getElementById('newAnnounceTitle').value.trim();
   const body = document.getElementById('newAnnounceBody').value.trim();
   const badgeType = document.getElementById('newAnnounceBadge').value;
   
   if (!title || !body) { alert('タイトルと本文を入力してください'); return; }
-  
-  const badgeMap = {
-    important: { class: 'badge-important', text: '重要' },
-    new: { class: 'badge-new', text: '新着' },
-    info: { class: 'badge-info', text: '情報' }
-  };
-  
+
   const now = new Date();
-  const month = now.getFullYear();
-  const day = `${now.getMonth()+1}/${now.getDate()}`;
-  
-  const badge = badgeMap[badgeType];
-  const html = `
-    <div class="announce-item" style="animation: fadeUp 0.4s ease;">
-      <div class="announce-date">
-        <div class="month">${month}</div>
-        <div class="day">${day}</div>
-      </div>
-      <div class="announce-body">
-        <span class="badge ${badge.class}">${badge.text}</span>
-        <h3>${title}</h3>
-        <p>${body}</p>
-      </div>
-    </div>
-  `;
-  
-  document.getElementById('announceList').insertAdjacentHTML('afterbegin', html);
+  const entry = {
+    title,
+    body,
+    badge: badgeType,
+    year: now.getFullYear(),
+    day: `${now.getMonth()+1}/${now.getDate()}`,
+    ts: now.getTime()
+  };
+
+  // 初回保存時：HTMLの初期お知らせも保持する
+  let list = getSavedAnnouncements();
+  if (list.length === 0) {
+    // HTML上の既存お知らせを取り込む
+    document.querySelectorAll('#announceList .announce-item').forEach(el => {
+      const y = el.querySelector('.month')?.textContent || '';
+      const d = el.querySelector('.day')?.textContent || '';
+      const t = el.querySelector('.announce-body h3')?.textContent || '';
+      const b = el.querySelector('.announce-body p')?.textContent || '';
+      const badgeEl = el.querySelector('.badge');
+      let bt = 'info';
+      if (badgeEl?.classList.contains('badge-important')) bt = 'important';
+      else if (badgeEl?.classList.contains('badge-new')) bt = 'new';
+      list.push({ title: t, body: b, badge: bt, year: y, day: d, ts: 0 });
+    });
+  }
+
+  list.unshift(entry);
+  saveAnnouncements(list);
+  loadAnnouncements();
+
   document.getElementById('newAnnounceTitle').value = '';
   document.getElementById('newAnnounceBody').value = '';
-  
-  // Switch to news section
+  alert('お知らせを投稿しました');
   showSection('news');
 }
+
+// ページ読み込み時にlocalStorageからお知らせを復元
+loadAnnouncements();
 
 function changePassword() {
   const newPw = document.getElementById('newPassword').value.trim();
