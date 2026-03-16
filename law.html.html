@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>法令集 — 消防職員ポータル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg2: #111827;
+  --bg-card: #1a2236;
+  --accent: #e05a33;
+  --accent-light: #f07050;
+  --text: #f0f2f8;
+  --text2: #8a94a8;
+  --text3: #5a6478;
+  --border: #2a3450;
+  --hl: rgba(224,90,51,0.25);
+  --radius: 10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ===== HEADER ===== */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,14,26,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:12px 20px;
+}
+.header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.back-link{
+  color:var(--accent);text-decoration:none;font-size:14px;font-weight:500;
+  display:flex;align-items:center;gap:4px;white-space:nowrap;
+}
+.back-link:hover{color:var(--accent-light);}
+.header h1{font-size:18px;font-weight:700;flex:1;min-width:0;}
+
+/* ===== TABS ===== */
+.tabs{
+  display:flex;gap:0;
+  background:var(--bg2);border-radius:8px;overflow:hidden;
+  margin:16px auto 0;max-width:1100px;
+  border:1px solid var(--border);
+}
+.tab-btn{
+  flex:1;padding:12px 16px;border:none;background:transparent;
+  color:var(--text2);font-size:14px;font-weight:500;cursor:pointer;
+  font-family:inherit;transition:.2s;position:relative;text-align:center;
+}
+.tab-btn.active{color:var(--accent);background:var(--bg-card);}
+.tab-btn.active::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:var(--accent);
+}
+.tab-btn:hover:not(.active){color:var(--text);background:rgba(255,255,255,0.03);}
+
+/* ===== SEARCH BAR ===== */
+.search-area{
+  max-width:1100px;margin:16px auto 0;padding:0 20px;
+  display:flex;gap:10px;align-items:center;
+}
+.search-input{
+  flex:1;padding:10px 14px;border-radius:8px;
+  border:1px solid var(--border);background:var(--bg2);
+  color:var(--text);font-size:14px;font-family:inherit;
+  outline:none;transition:.2s;
+}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(224,90,51,0.15);}
+.search-input::placeholder{color:var(--text3);}
+.search-btn{
+  padding:10px 20px;border-radius:8px;border:none;
+  background:var(--accent);color:#fff;font-size:14px;font-weight:600;
+  cursor:pointer;font-family:inherit;transition:.2s;white-space:nowrap;
+}
+.search-btn:hover{background:var(--accent-light);}
+.clear-btn{
+  padding:10px 16px;border-radius:8px;border:1px solid var(--border);
+  background:transparent;color:var(--text2);font-size:14px;
+  cursor:pointer;font-family:inherit;transition:.2s;white-space:nowrap;
+}
+.clear-btn:hover{border-color:var(--text2);color:var(--text);}
+.match-count{font-size:13px;color:var(--text2);white-space:nowrap;min-width:60px;text-align:right;}
+
+/* ===== LAYOUT ===== */
+.main{max-width:1100px;margin:0 auto;display:flex;gap:0;padding:16px 20px 80px;}
+.sidebar{
+  width:280px;flex-shrink:0;position:sticky;top:80px;
+  max-height:calc(100vh - 100px);overflow-y:auto;
+  padding-right:16px;border-right:1px solid var(--border);
+  scrollbar-width:thin;scrollbar-color:var(--border) transparent;
+}
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.content{flex:1;min-width:0;padding-left:24px;}
+
+/* ===== TOC ===== */
+.toc-title{
+  font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;
+  letter-spacing:1px;margin-bottom:12px;padding-left:8px;
+}
+.toc-chapter{
+  font-size:13px;font-weight:600;color:var(--accent);
+  margin-top:14px;margin-bottom:4px;padding-left:8px;
+}
+.toc-link{
+  display:block;padding:4px 8px;border-radius:4px;
+  font-size:13px;color:var(--text2);text-decoration:none;
+  line-height:1.6;transition:.15s;
+}
+.toc-link:hover{color:var(--text);background:rgba(255,255,255,0.04);}
+.toc-link.active{color:var(--accent);background:var(--hl);}
+
+/* ===== LAW CONTENT ===== */
+.law-panel{display:none;}
+.law-panel.active{display:block;}
+.law-info{
+  font-size:13px;color:var(--text3);margin-bottom:20px;
+  padding:12px 16px;background:var(--bg2);border-radius:8px;
+  border:1px solid var(--border);line-height:1.8;
+}
+.chapter-heading{
+  font-size:16px;font-weight:700;color:var(--accent);
+  margin:32px 0 12px;padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+.chapter-heading:first-child{margin-top:0;}
+.article{
+  margin-bottom:20px;padding:14px 18px;
+  background:var(--bg-card);border-radius:var(--radius);
+  border:1px solid var(--border);line-height:1.85;font-size:14px;
+  scroll-margin-top:90px;transition:.2s;
+}
+.article:target,.article.flash{border-color:var(--accent);box-shadow:0 0 0 3px rgba(224,90,51,0.12);}
+.article-title{
+  font-size:14px;font-weight:600;color:var(--accent-light);margin-bottom:6px;
+}
+.article-subtitle{
+  font-size:12px;color:var(--text3);margin-bottom:8px;
+}
+.article p{margin-bottom:6px;color:var(--text);text-align:justify;}
+.article .item{padding-left:1.5em;margin-bottom:4px;}
+.article .sub-item{padding-left:3em;margin-bottom:4px;font-size:13px;color:var(--text2);}
+
+mark{background:var(--hl);color:var(--accent-light);border-radius:2px;padding:0 1px;}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .content{padding-left:0;}
+  .main{padding:12px 12px 80px;}
+  .header-inner{gap:8px;}
+  .header h1{font-size:15px;}
+  .search-area{padding:0 12px;flex-wrap:wrap;}
+  .search-input{min-width:0;}
+  .tabs{margin:12px 12px 0;border-radius:6px;}
+  .tab-btn{padding:10px 8px;font-size:13px;}
+  .article{padding:12px 14px;}
+}
+/* ===== TOC TOGGLE (mobile) ===== */
+.toc-toggle{
+  display:none;
+  position:fixed;bottom:20px;right:20px;z-index:90;
+  width:48px;height:48px;border-radius:50%;
+  background:var(--accent);color:#fff;border:none;
+  font-size:20px;cursor:pointer;box-shadow:0 4px 16px rgba(224,90,51,0.4);
+}
+@media(max-width:768px){
+  .toc-toggle{display:flex;align-items:center;justify-content:center;}
+}
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;z-index:95;
+  background:rgba(0,0,0,0.6);
+}
+.sidebar-overlay.open{display:block;}
+.sidebar-mobile{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:96;
+  background:var(--bg2);border-top:1px solid var(--border);
+  max-height:60vh;overflow-y:auto;padding:16px 20px 24px;
+  border-radius:16px 16px 0 0;
+}
+.sidebar-mobile.open{display:block;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <a href="index.html" class="back-link">← ポータルに戻る</a>
+    <h1>📖 法令集</h1>
+  </div>
+  <!-- TABS -->
+  <div class="tabs" style="margin-top:10px;">
+    <button class="tab-btn active" onclick="switchTab('emt')">救急救命士法</button>
+    <button class="tab-btn" onclick="switchTab('fire')">消防法（救急業務）</button>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-area">
+  <input type="text" class="search-input" id="searchInput" placeholder="条文を検索…（例：特定行為、救急救命処置）" onkeydown="if(event.key==='Enter')doSearch()">
+  <button class="search-btn" onclick="doSearch()">検索</button>
+  <button class="clear-btn" onclick="clearSearch()">クリア</button>
+  <span class="match-count" id="matchCount"></span>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- SIDEBAR (desktop) -->
+  <nav class="sidebar" id="sidebarDesktop">
+    <div id="tocContent"></div>
+  </nav>
+  <!-- CONTENT -->
+  <div class="content" id="lawContent"></div>
+</div>
+
+<!-- MOBILE TOC -->
+<button class="toc-toggle" id="tocToggle" onclick="toggleMobileToc()">目</button>
+<div class="sidebar-overlay" id="tocOverlay" onclick="toggleMobileToc()"></div>
+<div class="sidebar-mobile" id="tocMobile"></div>
+
+<script>
+// ========== LAW DATA ==========
+const laws = {
+  emt: {
+    title: "救急救命士法",
+    info: "平成3年法律第36号　最終改正：平成26年6月13日法律第69号",
+    chapters: [
+      {
+        title: "第1章　総則",
+        articles: [
+          {id:"a1",num:"第1条",sub:"（目的）",text:`この法律は、救急救命士の資格を定めるとともに、その業務が適正に運用されるように規律し、もって医療の普及及び向上に寄与することを目的とする。`},
+          {id:"a2",num:"第2条",sub:"（定義）",text:`この法律で「救急救命処置」とは、その症状が著しく悪化するおそれがあり、又はその生命が危険な状態にある傷病者（以下この項及び第44条第2項において「重度傷病者」という。）が病院又は診療所に搬送されるまでの間に、当該重度傷病者に対して行われる気道の確保、心拍の回復その他の処置であって、当該重度傷病者の症状の著しい悪化を防止し、又はその生命の危険を回避するために緊急に必要なものをいう。\n２　この法律で「救急救命士」とは、厚生労働大臣の免許を受けて、救急救命士の名称を用いて、医師の指示の下に、救急救命処置を行うことを業とする者をいう。`}
+        ]
+      },
+      {
+        title: "第2章　免許",
+        articles: [
+          {id:"a3",num:"第3条",sub:"（免許）",text:`救急救命士になろうとする者は、救急救命士国家試験（以下「試験」という。）に合格し、厚生労働大臣の免許（第34条第5号を除き、以下「免許」という。）を受けなければならない。`},
+          {id:"a4",num:"第4条",sub:"（欠格事由）",text:`次の各号のいずれかに該当する者には、免許を与えないことがある。\n一　罰金以上の刑に処せられた者\n二　前号に該当する者を除くほか、救急救命士の業務に関し犯罪又は不正の行為があった者\n三　心身の障害により救急救命士の業務を適正に行うことができない者として厚生労働省令で定めるもの\n四　麻薬、大麻又はあへんの中毒者`},
+          {id:"a5",num:"第5条",sub:"（救急救命士名簿）",text:`厚生労働省に救急救命士名簿を備え、免許に関する事項を登録する。`},
+          {id:"a6",num:"第6条",sub:"（登録及び免許証の交付）",text:`免許は、試験に合格した者の申請により、救急救命士名簿に登録することによって行う。\n２　厚生労働大臣は、免許を与えたときは、救急救命士免許証を交付する。`},
+          {id:"a7",num:"第7条",sub:"（意見の聴取）",text:`厚生労働大臣は、免許を申請した者について、第4条第3号に掲げる者に該当すると認め、同条の規定により免許を与えないこととするときは、あらかじめ、当該申請者にその旨を通知し、その求めがあったときは、厚生労働大臣の指定する職員にその意見を聴取させなければならない。`},
+          {id:"a8",num:"第8条",sub:"（救急救命士名簿の訂正）",text:`救急救命士は、救急救命士名簿に登録された免許に関する事項に変更があったときは、30日以内に、当該事項の変更を厚生労働大臣に申請しなければならない。`},
+          {id:"a9",num:"第9条",sub:"（免許の取消し等）",text:`救急救命士が第4条各号のいずれかに該当するに至ったときは、厚生労働大臣は、その免許を取り消し、又は期間を定めて救急救命士の名称の使用の停止を命ずることができる。\n２　前項の規定により免許を取り消された者であっても、その者がその取消しの理由となった事項に該当しなくなったとき、その他その後の事情により再び免許を与えるのが適当であると認められるに至ったときは、再免許を与えることができる。この場合においては、第6条の規定を準用する。`},
+          {id:"a10",num:"第10条",sub:"（登録の消除）",text:`厚生労働大臣は、免許がその効力を失ったときは、救急救命士名簿に登録されたその免許に関する事項を消除しなければならない。`},
+          {id:"a11",num:"第11条",sub:"（免許証の再交付手数料）",text:`救急救命士免許証の再交付を受けようとする者は、実費を勘案して政令で定める額の手数料を国に納付しなければならない。`},
+          {id:"a12",num:"第12条",sub:"（指定登録機関の指定）",text:`厚生労働大臣は、厚生労働省令で定めるところにより、その指定する者（以下「指定登録機関」という。）に、救急救命士名簿の登録の実施に関する事務（以下「登録事務」という。）を行わせることができる。\n２　指定登録機関の指定は、厚生労働省令で定めるところにより、登録事務を行おうとする者の申請により行う。\n３　厚生労働大臣は、他に第1項の規定による指定を受けた者がなく、かつ、前項の申請が次の要件を満たしていると認めるときでなければ、指定登録機関の指定をしてはならない。\n一　職員、設備、登録事務の実施の方法その他の事項についての登録事務の実施に関する計画が、登録事務の適正かつ確実な実施のために適切なものであること。\n二　前号の登録事務の実施に関する計画の適正かつ確実な実施に必要な経理的及び技術的な基礎を有するものであること。\n４　厚生労働大臣は、第2項の申請が次のいずれかに該当するときは、指定登録機関の指定をしてはならない。\n一　申請者が、一般社団法人又は一般財団法人以外の者であること。\n二　申請者が、その行う登録事務以外の業務により登録事務を公正に実施することができないおそれがあること。\n三　申請者が、第23条の規定により指定を取り消され、その取消しの日から起算して2年を経過しない者であること。\n四　申請者の役員のうちに、次のいずれかに該当する者があること。\nイ　この法律に違反して、刑に処せられ、その執行を終わり、又は執行を受けることがなくなった日から起算して2年を経過しない者\nロ　次条第2項の規定による命令により解任され、その解任の日から起算して2年を経過しない者`},
+          {id:"a13-29",num:"第13条〜第29条",sub:"（指定登録機関・厚生労働省令への委任）",text:`第13条から第29条までは、指定登録機関の役員の選任及び解任、事業計画の認可、登録事務規程、秘密保持義務、帳簿の備付け、監督命令、報告、立入検査、登録事務の休廃止、指定の取消し、指定等の条件、審査請求、厚生労働大臣による登録事務の実施、公示、及び厚生労働省令への委任について規定する。`}
+        ]
+      },
+      {
+        title: "第3章　試験",
+        articles: [
+          {id:"a30",num:"第30条",sub:"（試験）",text:`試験は、救急救命士として必要な知識及び技能について行う。`},
+          {id:"a31",num:"第31条",sub:"（試験の実施）",text:`試験は、毎年一回以上、厚生労働大臣が行う。`},
+          {id:"a32",num:"第32条",sub:"（救急救命士試験委員）",text:`試験の問題の作成及び採点を行わせるため、厚生労働省に救急救命士試験委員（次項及び次条において「試験委員」という。）を置く。\n２　試験委員に関し必要な事項は、政令で定める。`},
+          {id:"a33",num:"第33条",sub:"（不正行為の禁止）",text:`試験委員は、試験の問題の作成及び採点について、厳正を保持し不正の行為のないようにしなければならない。`},
+          {id:"a34",num:"第34条",sub:"（受験資格）",text:`試験は、次の各号のいずれかに該当する者でなければ、受けることができない。\n一　学校教育法第90条第1項の規定により大学に入学することができる者で、文部科学大臣が指定した学校又は都道府県知事が指定した救急救命士養成所において、2年以上救急救命士として必要な知識及び技能を修得したもの\n二　学校教育法に基づく大学若しくは高等専門学校又は厚生労働省令で定める学校等において1年以上修業し、かつ、厚生労働大臣の指定する科目を修めた者で、指定学校又は養成所において1年以上知識及び技能を修得したもの\n三　学校教育法に基づく大学において厚生労働大臣の指定する科目を修めて卒業した者\n四　消防法第2条第9項に規定する救急業務に関する講習の課程を修了し、所定期間以上救急業務に従事した者であって、指定学校又は養成所において1年（所定のものにあっては6月）以上知識及び技能を修得したもの\n五　外国の救急救命処置に関する学校等を卒業し、又は外国で相当する免許を受けた者で、厚生労働大臣が前各号に掲げる者と同等以上の知識及び技能を有すると認定したもの`},
+          {id:"a35",num:"第35条",sub:"（試験の無効等）",text:`厚生労働大臣は、試験に関して不正の行為があった場合には、その不正行為に関係のある者に対しては、その受験を停止させ、又はその試験を無効とすることができる。\n２　厚生労働大臣は、前項の規定による処分を受けた者に対し、期間を定めて試験を受けることができないものとすることができる。`},
+          {id:"a36-42",num:"第36条〜第42条",sub:"（受験手数料・指定試験機関・試験の細目等）",text:`第36条から第42条までは、受験手数料、指定試験機関の指定、指定試験機関の救急救命士試験委員、受験の停止等、準用規定、及び試験の細目等について規定する。`}
+        ]
+      },
+      {
+        title: "第4章　業務等",
+        articles: [
+          {id:"a43",num:"第43条",sub:"（業務）",text:`救急救命士は、保健師助産師看護師法第31条第1項及び第32条の規定にかかわらず、診療の補助として救急救命処置を行うことを業とすることができる。\n２　前項の規定は、第9条第1項の規定により救急救命士の名称の使用の停止を命ぜられている者については、適用しない。`},
+          {id:"a44",num:"第44条",sub:"（特定行為等の制限）",text:`救急救命士は、医師の具体的な指示を受けなければ、厚生労働省令で定める救急救命処置を行ってはならない。\n２　救急救命士は、救急用自動車その他の重度傷病者を搬送するためのものであって厚生労働省令で定めるもの（以下この項及び第53条第2号において「救急用自動車等」という。）以外の場所においてその業務を行ってはならない。ただし、病院又は診療所への搬送のため重度傷病者を救急用自動車等に乗せるまでの間において救急救命処置を行うことが必要と認められる場合は、この限りでない。`},
+          {id:"a45",num:"第45条",sub:"（他の医療関係者との連携）",text:`救急救命士は、その業務を行うに当たっては、医師その他の医療関係者との緊密な連携を図り、適正な医療の確保に努めなければならない。`},
+          {id:"a46",num:"第46条",sub:"（救急救命処置録）",text:`救急救命士は、救急救命処置を行ったときは、遅滞なく厚生労働省令で定める事項を救急救命処置録に記載しなければならない。\n２　前項の救急救命処置録は、所定の機関において、その記載の日から5年間、これを保存しなければならない。`},
+          {id:"a47",num:"第47条",sub:"（秘密を守る義務）",text:`救急救命士は、正当な理由がなく、その業務上知り得た人の秘密を漏らしてはならない。救急救命士でなくなった後においても、同様とする。`},
+          {id:"a48",num:"第48条",sub:"（名称の使用制限）",text:`救急救命士でない者は、救急救命士又はこれに紛らわしい名称を使用してはならない。`},
+          {id:"a48_2",num:"第48条の2",sub:"（権限の委任）",text:`この法律に規定する厚生労働大臣の権限は、厚生労働省令で定めるところにより、地方厚生局長に委任することができる。\n２　前項の規定により地方厚生局長に委任された権限は、厚生労働省令で定めるところにより、地方厚生支局長に委任することができる。`},
+          {id:"a49",num:"第49条",sub:"（経過措置）",text:`この法律の規定に基づき命令を制定し、又は改廃する場合においては、その命令で、その制定又は改廃に伴い合理的に必要と判断される範囲内において、所要の経過措置（罰則に関する経過措置を含む。）を定めることができる。`}
+        ]
+      },
+      {
+        title: "第5章　罰則",
+        articles: [
+          {id:"a50",num:"第50条",sub:"",text:`第17条第1項の規定に違反して、登録事務又は試験事務に関して知り得た秘密を漏らした者は、1年以下の懲役又は50万円以下の罰金に処する。`},
+          {id:"a51",num:"第51条",sub:"",text:`第23条第2項の規定による登録事務又は試験事務の停止の命令に違反したときは、その違反行為をした指定登録機関又は指定試験機関の役員又は職員は、1年以下の懲役又は50万円以下の罰金に処する。`},
+          {id:"a52",num:"第52条",sub:"",text:`第33条又は第39条の規定に違反して、不正の採点をした者は、1年以下の懲役又は50万円以下の罰金に処する。`},
+          {id:"a53",num:"第53条",sub:"",text:`次の各号のいずれかに該当する者は、6月以下の懲役若しくは30万円以下の罰金に処し、又はこれを併科する。\n一　第44条第1項の規定に違反して、同項の規定に基づく厚生労働省令の規定で定める救急救命処置を行った者\n二　第44条第2項の規定に違反して、救急用自動車等以外の場所で業務を行った者`},
+          {id:"a54",num:"第54条",sub:"",text:`第47条の規定に違反して、業務上知り得た人の秘密を漏らした者は、50万円以下の罰金に処する。\n２　前項の罪は、告訴がなければ公訴を提起することができない。`},
+          {id:"a55",num:"第55条",sub:"",text:`次の各号のいずれかに該当する者は、30万円以下の罰金に処する。\n一　第9条第1項の規定により救急救命士の名称の使用の停止を命ぜられた者で、当該停止を命ぜられた期間中に、救急救命士の名称を使用したもの\n二　第46条第1項の規定に違反して、救急救命処置録に記載せず、又は虚偽の記載をした者\n三　第46条第2項の規定に違反して、救急救命処置録を保存しなかった者\n四　第48条の規定に違反して、救急救命士又はこれに紛らわしい名称を使用した者`},
+          {id:"a56",num:"第56条",sub:"",text:`次の各号のいずれかに該当するときは、その違反行為をした指定登録機関又は指定試験機関の役員又は職員は、30万円以下の罰金に処する。\n一　第18条の規定に違反して、帳簿を備え付けず、帳簿に記載せず、若しくは帳簿に虚偽の記載をし、又は帳簿を保存しなかったとき。\n二　第20条の規定による報告をせず、又は虚偽の報告をしたとき。\n三　第21条第1項の規定による立入り若しくは検査を拒み、妨げ、若しくは忌避し、又は同項の規定による質問に対して陳述をせず、若しくは虚偽の陳述をしたとき。\n四　第22条の許可を受けないで登録事務又は試験事務の全部を廃止したとき。`}
+        ]
+      }
+    ]
+  },
+  fire: {
+    title: "消防法（救急業務関連）",
+    info: "昭和23年法律第186号　最終改正：平成30年6月27日法律第67号\n※ 第2条第9項（救急業務の定義）及び第7章の2（第35条の5〜第35条の12）を抜粋",
+    chapters: [
+      {
+        title: "第1章　総則（抜粋）",
+        articles: [
+          {id:"f2-9",num:"第2条第9項",sub:"（救急業務の定義）",text:`救急業務とは、災害により生じた事故若しくは屋外若しくは公衆の出入する場所において生じた事故（以下この項において「災害による事故等」という。）又は政令で定める場合における災害による事故等に準ずる事故その他の事由で政令で定めるものによる傷病者のうち、医療機関その他の場所へ緊急に搬送する必要があるものを、救急隊によつて、医療機関（厚生労働省令で定める医療機関をいう。第7章の2において同じ。）その他の場所に搬送すること（傷病者が医師の管理下に置かれるまでの間において、緊急やむを得ないものとして、応急の手当を行うことを含む。）をいう。`}
+        ]
+      },
+      {
+        title: "第7章の2　救急業務",
+        articles: [
+          {id:"f35_5",num:"第35条の5",sub:"（救急搬送に関する実施基準）",text:`都道府県は、消防機関による救急業務としての傷病者（第2条第9項に規定する傷病者をいう。以下この章において同じ。）の搬送（以下この章において「傷病者の搬送」という。）及び医療機関による当該傷病者の受入れ（以下この章において「傷病者の受入れ」という。）の迅速かつ適切な実施を図るため、傷病者の搬送及び傷病者の受入れの実施に関する基準（以下この章において「実施基準」という。）を定めなければならない。\n２　実施基準においては、都道府県の区域又は医療を提供する体制の状況を考慮して都道府県の区域を分けて定める区域ごとに、次に掲げる事項を定めるものとする。\n一　傷病者の心身等の状況（以下この項において「傷病者の状況」という。）に応じた適切な医療の提供が行われることを確保するために医療機関を分類する基準\n二　前号に掲げる基準に基づき分類された医療機関の区分及び当該区分に該当する医療機関の名称\n三　消防機関が傷病者の状況を確認するための基準\n四　消防機関が傷病者の搬送を行おうとする医療機関を選定するための基準\n五　消防機関が傷病者の搬送を行おうとする医療機関に対し傷病者の状況を伝達するための基準\n六　前二号に掲げるもののほか、傷病者の受入れに関する消防機関と医療機関との間の合意を形成するための基準その他傷病者の受入れを行う医療機関の確保に資する事項\n七　前各号に掲げるもののほか、傷病者の搬送及び傷病者の受入れの実施に関し都道府県が必要と認める事項\n３　実施基準は、医学的知見に基づき、かつ、医療法第30条の4第1項に規定する医療計画との調和が保たれるように定められなければならない。\n４　都道府県は、実施基準を定めるときは、あらかじめ、第35条の8第1項に規定する協議会の意見を聴かなければならない。\n５　都道府県は、実施基準を定めたときは、遅滞なく、その内容を公表しなければならない。\n６　前三項の規定は、実施基準の変更について準用する。`},
+          {id:"f35_6",num:"第35条の6",sub:"（消防機関の義務）",text:`消防機関は、傷病者の搬送に当たつては、実施基準を遵守しなければならない。`},
+          {id:"f35_7",num:"第35条の7",sub:"（医療機関の義務）",text:`医療機関は、傷病者の受入れに当たつては、実施基準を尊重するよう努めるものとする。`},
+          {id:"f35_8",num:"第35条の8",sub:"（傷病者の搬送及び受入れの実施に関する連絡協議会）",text:`都道府県は、実施基準に関する協議並びに実施基準に基づく傷病者の搬送及び傷病者の受入れの実施に係る連絡調整を行うための協議会（以下この条において「協議会」という。）を組織するものとする。\n２　協議会は、次に掲げる者をもつて構成する。\n一　消防機関の職員\n二　医療機関の管理者又はその指定する医師\n三　診療に関する学識経験者の団体の推薦する者\n四　都道府県の職員\n五　学識経験者その他の都道府県が必要と認める者\n３　協議会は、実施基準に基づく傷病者の搬送及び傷病者の受入れの実施の状況について随時検証を行い、その結果に基づき、都道府県に対し、実施基準の変更その他の必要な措置について議論を行うものとする。\n４　前三項に定めるもののほか、協議会の組織及び運営に関し必要な事項は、協議会が定める。`},
+          {id:"f35_9",num:"第35条の9",sub:"（消防庁長官の助言）",text:`消防庁長官は、都道府県に対し、実施基準の策定又は実施に関し必要な情報の提供、助言その他の援助を行うものとする。`},
+          {id:"f35_10",num:"第35条の10",sub:"（報告の徴収）",text:`消防庁長官は、救急業務の実施状況を把握するため必要があると認めるときは、消防機関に対し、必要な報告を求めることができる。`},
+          {id:"f35_11",num:"第35条の11",sub:"（市町村の救急業務）",text:`市町村は、その消防機関が救急業務を行うことができるように、救急隊の編成に必要な施設及び人員を確保するように努めるとともに、救急業務の実施に関し必要な事項について消防庁長官が定める指針に基づき、傷病者の搬送及び受入れの円滑な実施を図るための措置を講ずるよう努めなければならない。`},
+          {id:"f35_12",num:"第35条の12",sub:"（政令への委任）",text:`この章に定めるもののほか、救急業務に関し必要な事項は、政令で定める。`}
+        ]
+      }
+    ]
+  }
+};
+
+// ========== STATE ==========
+let currentTab = 'emt';
+let originalHTML = {};
+
+// ========== RENDER ==========
+function renderLaw(key) {
+  const law = laws[key];
+  // TOC
+  let toc = `<div class="toc-title">目次</div>`;
+  law.chapters.forEach(ch => {
+    toc += `<div class="toc-chapter">${ch.title}</div>`;
+    ch.articles.forEach(a => {
+      const label = a.num + (a.sub ? ' ' + a.sub : '');
+      toc += `<a class="toc-link" href="#${a.id}" onclick="flashArticle('${a.id}')">${label}</a>`;
+    });
+  });
+
+  // Content
+  let html = `<div class="law-panel ${key === currentTab ? 'active' : ''}" id="panel-${key}">`;
+  html += `<div class="law-info">${law.info.replace(/\n/g,'<br>')}</div>`;
+  law.chapters.forEach(ch => {
+    html += `<div class="chapter-heading">${ch.title}</div>`;
+    ch.articles.forEach(a => {
+      const paras = a.text.split('\n').map(p => {
+        if(/^[一二三四五六七八九十]+　/.test(p) || /^[イロハニホヘト]　/.test(p)) return `<p class="sub-item">${p}</p>`;
+        if(/^[一-九]/.test(p) || /^[０-９]/.test(p)) return `<p class="item">${p}</p>`;
+        if(/^[２３４５６７８９]/.test(p)) return `<p>${p}</p>`;
+        return `<p>${p}</p>`;
+      }).join('');
+      html += `<div class="article" id="${a.id}">
+        <div class="article-title">${a.num}</div>
+        ${a.sub ? `<div class="article-subtitle">${a.sub}</div>` : ''}
+        ${paras}
+      </div>`;
+    });
+  });
+  html += '</div>';
+  return { toc, content: html };
+}
+
+function init() {
+  let tocAll = '', contentAll = '';
+  for (const key of ['emt','fire']) {
+    const r = renderLaw(key);
+    tocAll += `<div class="toc-panel" id="toc-${key}" style="display:${key===currentTab?'block':'none'}">${r.toc}</div>`;
+    contentAll += r.content;
+  }
+  document.getElementById('sidebarDesktop').innerHTML = tocAll;
+  document.getElementById('tocMobile').innerHTML = tocAll.replace(/toc-panel/g,'toc-panel-m').replace(/id="toc-/g,'id="toc-m-');
+  document.getElementById('lawContent').innerHTML = contentAll;
+  // store original
+  document.querySelectorAll('.law-panel').forEach(p => { originalHTML[p.id] = p.innerHTML; });
+}
+
+function switchTab(key) {
+  currentTab = key;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (i===0&&key==='emt')||(i===1&&key==='fire')));
+  document.querySelectorAll('.law-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-'+key));
+  document.querySelectorAll('.toc-panel,.toc-panel-m,[id^="toc-m-"]').forEach(p => {
+    if(p.id.includes(key)) p.style.display='block'; else p.style.display='none';
+  });
+  clearSearch();
+}
+
+function flashArticle(id) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.classList.add('flash');
+  setTimeout(()=>el.classList.remove('flash'),1500);
+  // close mobile toc
+  document.getElementById('tocOverlay').classList.remove('open');
+  document.getElementById('tocMobile').classList.remove('open');
+}
+
+// ========== SEARCH ==========
+function doSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  if(!q) { clearSearch(); return; }
+  // restore original first
+  for(const id in originalHTML) {
+    document.getElementById(id).innerHTML = originalHTML[id];
+  }
+  const panel = document.getElementById('panel-'+currentTab);
+  const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi');
+  let count = 0;
+  panel.querySelectorAll('.article p, .article .article-title, .article .article-subtitle').forEach(el => {
+    if(regex.test(el.textContent)) {
+      el.innerHTML = el.innerHTML.replace(regex,'<mark>$1</mark>');
+      count += (el.innerHTML.match(/<mark>/g)||[]).length;
+    }
+  });
+  document.getElementById('matchCount').textContent = count > 0 ? count+'件' : '0件';
+  // scroll to first match
+  const first = panel.querySelector('mark');
+  if(first) first.closest('.article').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('matchCount').textContent = '';
+  for(const id in originalHTML) {
+    document.getElementById(id).innerHTML = originalHTML[id];
+  }
+}
+
+// ========== MOBILE TOC ==========
+function toggleMobileToc() {
+  document.getElementById('tocOverlay').classList.toggle('open');
+  document.getElementById('tocMobile').classList.toggle('open');
+}
+
+// ========== INIT ==========
+init();
+</script>
+</body>
+</html>
